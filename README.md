@@ -1,57 +1,36 @@
-# POC-5 — Real-Time Payments Map
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Real Rails Intelligence Library
+## Getting Started
 
-An interactive intelligence platform that visualizes real-time payment schemes across countries and compares them by maturity and launch year.
+First, run the development server:
 
-## Overview
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-The Real-Time Payments Map provides a geographic view of instant payment infrastructure around the world.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-The application currently presents payment schemes including:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-- United States — FedNow — 2023 — Emerging
-- India — UPI — 2016 — Mature
-- United Kingdom — Faster Payments — 2008 — Mature
-- Singapore — FAST — 2014 — Mature
-- Brazil — Pix — 2020 — Mature
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Key Features
+## Learn More
 
-- Interactive world map
-- Geographic payment-scheme visualization
-- Maturity-level filtering
-- Payment scheme information cards
-- Launch-year timeline
-- Key signal showing the number of schemes in the current view
-- Responsive intelligence dashboard
-- Interactive Leaflet map
+To learn more about Next.js, take a look at the following resources:
 
-## Intelligence Questions
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-The application helps users understand:
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-1. Where real-time payment systems exist
-2. Which payment schemes are mature or emerging
-3. When major payment systems were launched
-4. How real-time payment infrastructure is distributed geographically
-5. Who operates or governs payment rails
+## Deploy on Vercel
 
-## Technology Stack
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-- Next.js
-- React
-- TypeScript
-- Leaflet
-- React Leaflet
-- OpenStreetMap
-
-## Project Structure
-
-```text
-POC-5-Real-Time-Payments-Map-Dhanusha/
-│
-├── architecture/
-├── screenshots/
-├── README.md
-└── frontend-app/
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
