@@ -56,32 +56,25 @@ const paymentLocations: Record<
   },
 };
 
-/*
- * React-Leaflet v5 can sometimes produce incorrect TypeScript
- * prop errors depending on the installed React/TypeScript types.
- * These aliases keep the runtime components unchanged while
- * allowing the project to build correctly.
- */
-const SafeMapContainer = MapContainer as any;
-const SafeTileLayer = TileLayer as any;
-const SafeCircleMarker = CircleMarker as any;
-
 export default function PaymentMap({
   schemes,
 }: PaymentMapProps) {
   return (
-    <div className="w-full overflow-hidden rounded-xl">
-      <SafeMapContainer
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <MapContainer
         center={[20, 0]}
         zoom={2}
+        minZoom={2}
+        maxZoom={6}
         scrollWheelZoom={true}
+        worldCopyJump={false}
         style={{
-          height: "600px",
+          height: "520px",
           width: "100%",
         }}
       >
-        <SafeTileLayer
-          attribution="&copy; OpenStreetMap contributors"
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
@@ -92,45 +85,172 @@ export default function PaymentMap({
             return null;
           }
 
+          const isEmerging =
+            item.maturity.toLowerCase() === "emerging";
+
           return (
-            <SafeCircleMarker
+            <CircleMarker
               key={item.code}
               center={[location.lat, location.lng]}
-              radius={12}
+              radius={11}
               pathOptions={{
-                color: "#3b82f6",
-                fillColor: "#60a5fa",
-                fillOpacity: 0.35,
+                color: isEmerging ? "#f59e0b" : "#22c55e",
+                fillColor: isEmerging ? "#f59e0b" : "#22c55e",
+                fillOpacity: 0.75,
                 weight: 3,
               }}
             >
               <Popup>
-                <div className="min-w-[180px]">
-                  <h3 className="text-base font-bold">
+                <div
+                  style={{
+                    minWidth: "220px",
+                    padding: "4px",
+                    fontFamily:
+                      "Arial, Helvetica, sans-serif",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "700",
+                      color: "#0f172a",
+                      marginBottom: "8px",
+                    }}
+                  >
                     {item.country}
-                  </h3>
+                  </div>
 
-                  <p className="mt-1 font-medium">
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: "600",
+                      color: "#2563eb",
+                      marginBottom: "12px",
+                    }}
+                  >
                     {item.scheme}
-                  </p>
+                  </div>
 
-                  <p className="mt-1 text-sm">
-                    Launch year: {item.launch_year}
-                  </p>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "8px",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          textTransform: "uppercase",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Code
+                      </div>
 
-                  <p className="text-sm">
-                    Maturity: {item.maturity}
-                  </p>
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          color: "#0f172a",
+                        }}
+                      >
+                        {item.code}
+                      </div>
+                    </div>
 
-                  <p className="mt-2 text-sm">
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          textTransform: "uppercase",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Launch Year
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          color: "#0f172a",
+                        }}
+                      >
+                        {item.launch_year}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          textTransform: "uppercase",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Region
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          color: "#0f172a",
+                        }}
+                      >
+                        {item.region}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          textTransform: "uppercase",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Maturity
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          color: isEmerging
+                            ? "#d97706"
+                            : "#16a34a",
+                        }}
+                      >
+                        {item.maturity}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      borderTop: "1px solid #e2e8f0",
+                      paddingTop: "10px",
+                      fontSize: "13px",
+                      lineHeight: "1.5",
+                      color: "#64748b",
+                    }}
+                  >
                     {item.description}
-                  </p>
+                  </div>
                 </div>
               </Popup>
-            </SafeCircleMarker>
+            </CircleMarker>
           );
         })}
-      </SafeMapContainer>
+      </MapContainer>
     </div>
   );
 }
