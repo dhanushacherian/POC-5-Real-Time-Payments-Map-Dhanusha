@@ -6,7 +6,17 @@ const PaymentMap = dynamic(() => import("../Map"), {
   ssr: false,
 });
 
-const schemes = [
+type Scheme = {
+  country: string;
+  code: string;
+  scheme: string;
+  launch_year: number;
+  maturity: string;
+  region: string;
+  description: string;
+};
+
+const schemes: Scheme[] = [
   {
     country: "United States",
     code: "US",
@@ -60,201 +70,231 @@ const schemes = [
 ];
 
 export default function Home() {
-  const matureCount = schemes.filter(
+  const totalCountries = schemes.length;
+
+  const matureSystems = schemes.filter(
     (item) => item.maturity === "Mature"
   ).length;
 
-  const emergingCount = schemes.filter(
+  const emergingSystems = schemes.filter(
     (item) => item.maturity === "Emerging"
   ).length;
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main className="min-h-screen bg-slate-950 text-white">
       {/* Header */}
-      <header className="border-b bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-6">
-          <div className="flex flex-col gap-2">
-            <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-              Payment Infrastructure POC
-            </p>
+      <header className="border-b border-slate-800 bg-slate-950">
+        <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+          <div className="flex flex-col gap-4">
+            <div>
+              <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-blue-400">
+                Payment Infrastructure POC
+              </p>
 
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Real-Time Payments Map
-            </h1>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+                Real-Time Payments Map
+              </h1>
 
-            <p className="max-w-2xl text-slate-600">
-              Explore real-time payment systems and instant payment
-              infrastructure across different countries.
-            </p>
+              <p className="mt-3 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg">
+                Explore real-time payment systems and instant payment
+                infrastructure across different countries.
+              </p>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
-
-        {/* Statistics */}
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-slate-500">
+      {/* Statistics */}
+      <section className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Countries */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
+            <p className="text-sm font-medium text-slate-400">
               Countries
             </p>
 
-            <p className="mt-2 text-3xl font-bold">
-              {schemes.length}
+            <p className="mt-3 text-4xl font-bold text-white">
+              {totalCountries}
             </p>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-slate-500">
               Payment markets tracked
             </p>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-slate-500">
+          {/* Payment Systems */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
+            <p className="text-sm font-medium text-slate-400">
               Payment Systems
             </p>
 
-            <p className="mt-2 text-3xl font-bold">
+            <p className="mt-3 text-4xl font-bold text-white">
               {schemes.length}
             </p>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-slate-500">
               Real-time schemes
             </p>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-slate-500">
+          {/* Mature */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
+            <p className="text-sm font-medium text-slate-400">
               Mature Systems
             </p>
 
-            <p className="mt-2 text-3xl font-bold text-green-600">
-              {matureCount}
+            <p className="mt-3 text-4xl font-bold text-emerald-400">
+              {matureSystems}
             </p>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-slate-500">
               Established infrastructure
             </p>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-slate-500">
+          {/* Emerging */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
+            <p className="text-sm font-medium text-slate-400">
               Emerging Systems
             </p>
 
-            <p className="mt-2 text-3xl font-bold text-orange-500">
-              {emergingCount}
+            <p className="mt-3 text-4xl font-bold text-amber-400">
+              {emergingSystems}
             </p>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-slate-500">
               Developing infrastructure
             </p>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Map */}
-        <section className="mt-8 overflow-hidden rounded-2xl border bg-white shadow-sm">
-          <div className="border-b px-6 py-5">
-            <h2 className="text-xl font-bold">
+      {/* Map Section */}
+      <section className="mx-auto max-w-7xl px-6 pb-10 lg:px-8">
+        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl">
+          {/* Map Header */}
+          <div className="border-b border-slate-800 px-6 py-6">
+            <h2 className="text-2xl font-bold text-white">
               Global Payment Infrastructure
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-slate-400">
               Click a marker to view payment-system details.
             </p>
+
+            {/* Legend */}
+            <div className="mt-5 flex flex-wrap gap-5 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-emerald-400" />
+                <span className="text-slate-400">
+                  Mature
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-amber-400" />
+                <span className="text-slate-400">
+                  Emerging
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div className="p-3">
-            <PaymentMap schemes={schemes} />
+          {/* Map */}
+          <div className="bg-slate-800 p-3">
+            <div className="overflow-hidden rounded-xl">
+              <PaymentMap schemes={schemes} />
+            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Payment systems */}
-        <section className="mt-8">
-          <div className="mb-5">
-            <h2 className="text-xl font-bold">
-              Payment Systems
-            </h2>
+      {/* Payment Systems */}
+      <section className="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-white">
+            Payment Systems
+          </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
-              Overview of the real-time payment systems represented
-              on the map.
-            </p>
-          </div>
+          <p className="mt-2 text-sm text-slate-400">
+            Overview of the real-time payment systems represented on the map.
+          </p>
+        </div>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {schemes.map((item) => (
-              <div
-                key={item.code}
-                className="rounded-2xl border bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-lg font-bold">
-                      {item.country}
-                    </h3>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {schemes.map((item) => (
+            <article
+              key={item.code}
+              className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg transition hover:-translate-y-1 hover:border-slate-700"
+            >
+              {/* Country + maturity */}
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-bold text-white">
+                    {item.country}
+                  </h3>
 
-                    <p className="mt-1 font-medium text-blue-600">
-                      {item.scheme}
-                    </p>
-                  </div>
+                  <p className="mt-1 text-base font-semibold text-blue-400">
+                    {item.scheme}
+                  </p>
+                </div>
 
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold">
-                    {item.code}
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                    item.maturity === "Mature"
+                      ? "bg-emerald-400/10 text-emerald-400"
+                      : "bg-amber-400/10 text-amber-400"
+                  }`}
+                >
+                  {item.maturity}
+                </span>
+              </div>
+
+              {/* Code */}
+              <div className="mt-5 inline-flex rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-bold tracking-wider text-slate-300">
+                {item.code}
+              </div>
+
+              {/* Details */}
+              <div className="mt-5 space-y-3 border-t border-slate-800 pt-5">
+                <div className="flex justify-between gap-4">
+                  <span className="text-sm text-slate-500">
+                    Launch year
+                  </span>
+
+                  <span className="text-sm font-medium text-slate-200">
+                    {item.launch_year}
                   </span>
                 </div>
 
-                <div className="mt-5 space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">
-                      Launch year
-                    </span>
+                <div className="flex justify-between gap-4">
+                  <span className="text-sm text-slate-500">
+                    Region
+                  </span>
 
-                    <span className="font-semibold">
-                      {item.launch_year}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">
-                      Region
-                    </span>
-
-                    <span className="font-semibold">
-                      {item.region}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">
-                      Maturity
-                    </span>
-
-                    <span
-                      className={
-                        item.maturity === "Mature"
-                          ? "font-semibold text-green-600"
-                          : "font-semibold text-orange-500"
-                      }
-                    >
-                      {item.maturity}
-                    </span>
-                  </div>
+                  <span className="text-sm font-medium text-slate-200">
+                    {item.region}
+                  </span>
                 </div>
-
-                <p className="mt-5 border-t pt-4 text-sm leading-6 text-slate-600">
-                  {item.description}
-                </p>
               </div>
-            ))}
-          </div>
-        </section>
 
-        {/* Footer */}
-        <footer className="mt-10 border-t py-6 text-center text-sm text-slate-500">
-          Real-Time Payments Map • Proof of Concept
-        </footer>
-      </div>
+              {/* Description */}
+              <p className="mt-5 text-sm leading-6 text-slate-400">
+                {item.description}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800 bg-slate-950">
+        <div className="mx-auto max-w-7xl px-6 py-6 text-center lg:px-8">
+          <p className="text-sm text-slate-500">
+            Real-Time Payments Map • Proof of Concept
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
