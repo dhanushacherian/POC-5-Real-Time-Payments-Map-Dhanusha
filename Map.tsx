@@ -1,257 +1,215 @@
 "use client";
 
-import {
-  MapContainer,
-  TileLayer,
-  CircleMarker,
-  Popup,
-} from "react-leaflet";
-
+import { useEffect, useRef } from "react";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-type Scheme = {
+type PaymentSystem = {
   country: string;
+  system: string;
   code: string;
-  scheme: string;
-  launch_year: number;
-  maturity: string;
+  launchYear: number;
   region: string;
+  maturity: "Mature" | "Emerging";
   description: string;
+  lat: number;
+  lng: number;
 };
 
-type PaymentMapProps = {
-  schemes: Scheme[];
-};
-
-const paymentLocations: Record<
-  string,
+const paymentSystems: PaymentSystem[] = [
   {
-    lat: number;
-    lng: number;
-  }
-> = {
-  US: {
+    country: "United States",
+    system: "FedNow",
+    code: "US",
+    launchYear: 2023,
+    region: "North America",
+    maturity: "Emerging",
+    description:
+      "Real-time payment infrastructure operated by the Federal Reserve.",
     lat: 39.8283,
     lng: -98.5795,
   },
-
-  IN: {
+  {
+    country: "India",
+    system: "UPI",
+    code: "IN",
+    launchYear: 2016,
+    region: "Asia",
+    maturity: "Mature",
+    description: "India's widely adopted instant payment system.",
     lat: 20.5937,
     lng: 78.9629,
   },
-
-  UK: {
+  {
+    country: "United Kingdom",
+    system: "Faster Payments",
+    code: "UK",
+    launchYear: 2008,
+    region: "Europe",
+    maturity: "Mature",
+    description:
+      "UK instant payment infrastructure enabling near real-time transfers.",
     lat: 55.3781,
     lng: -3.436,
   },
-
-  SG: {
+  {
+    country: "Singapore",
+    system: "FAST",
+    code: "SG",
+    launchYear: 2014,
+    region: "Asia",
+    maturity: "Mature",
+    description: "Singapore's fast and secure domestic payment system.",
     lat: 1.3521,
     lng: 103.8198,
   },
-
-  BR: {
+  {
+    country: "Brazil",
+    system: "Pix",
+    code: "BR",
+    launchYear: 2020,
+    region: "South America",
+    maturity: "Mature",
+    description:
+      "Brazil's instant payment platform developed by the Central Bank of Brazil.",
     lat: -14.235,
     lng: -51.9253,
   },
-};
+];
 
-export default function PaymentMap({
-  schemes,
-}: PaymentMapProps) {
+export default function Map() {
+  const mapRef = useRef<HTMLDivElement | null>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    if (!mapRef.current || mapInstanceRef.current) {
+      return;
+    }
+
+    const map = L.map(mapRef.current, {
+      center: [20, 10],
+      zoom: 2,
+      minZoom: 2,
+      maxZoom: 6,
+      worldCopyJump: true,
+      zoomControl: true,
+      attributionControl: true,
+    });
+
+    mapInstanceRef.current = map;
+
+    L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        noWrap: false,
+      }
+    ).addTo(map);
+
+    paymentSystems.forEach((item) => {
+      const markerColor =
+        item.maturity === "Mature" ? "#22c55e" : "#f59e0b";
+
+      const marker = L.circleMarker([item.lat, item.lng], {
+        radius: 14,
+        color: markerColor,
+        weight: 3,
+        fillColor: markerColor,
+        fillOpacity: 0.75,
+      });
+
+      marker.bindPopup(`
+        <div style="min-width:220px;">
+          <h3 style="
+            margin:0 0 6px;
+            font-size:18px;
+            font-weight:700;
+            color:#0f172a;
+          ">
+            ${item.country}
+          </h3>
+
+          <div style="
+            color:#2563eb;
+            font-size:16px;
+            font-weight:700;
+            margin-bottom:12px;
+          ">
+            ${item.system}
+          </div>
+
+          <div style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:8px;
+            font-size:13px;
+          ">
+            <div>
+              <strong>Code</strong><br/>
+              ${item.code}
+            </div>
+
+            <div>
+              <strong>Launch</strong><br/>
+              ${item.launchYear}
+            </div>
+
+            <div>
+              <strong>Region</strong><br/>
+              ${item.region}
+            </div>
+
+            <div>
+              <strong>Status</strong><br/>
+              ${item.maturity}
+            </div>
+          </div>
+
+          <p style="
+            margin:14px 0 0;
+            padding-top:12px;
+            border-top:1px solid #e2e8f0;
+            color:#52708f;
+            line-height:1.5;
+          ">
+            ${item.description}
+          </p>
+        </div>
+      `);
+
+      marker.addTo(map);
+    });
+
+    // Very important when the map is inside a responsive container.
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      map.remove();
+      mapInstanceRef.current = null;
+    };
+  }, []);
+
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <MapContainer
-        center={[20, 0]}
-        zoom={2}
-        minZoom={2}
-        maxZoom={6}
-        scrollWheelZoom={true}
-        worldCopyJump={false}
+    <div className="map-wrapper">
+      <div
+        ref={mapRef}
+        className="leaflet-container"
         style={{
-          height: "520px",
           width: "100%",
+          height: "100%",
         }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          noWrap={true}
-        />
-
-        {schemes.map((item) => {
-          const location = paymentLocations[item.code];
-
-          if (!location) {
-            return null;
-          }
-
-          const isEmerging =
-            item.maturity.toLowerCase() === "emerging";
-
-          return (
-            <CircleMarker
-              key={item.code}
-              center={[location.lat, location.lng]}
-              radius={11}
-              pathOptions={{
-                color: isEmerging ? "#f59e0b" : "#22c55e",
-                fillColor: isEmerging ? "#f59e0b" : "#22c55e",
-                fillOpacity: 0.75,
-                weight: 3,
-              }}
-            >
-              <Popup>
-                <div
-                  style={{
-                    minWidth: "220px",
-                    padding: "4px",
-                    fontFamily:
-                      "Arial, Helvetica, sans-serif",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: "700",
-                      color: "#0f172a",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {item.country}
-                  </div>
-
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: "600",
-                      color: "#2563eb",
-                      marginBottom: "12px",
-                    }}
-                  >
-                    {item.scheme}
-                  </div>
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "8px",
-                      marginBottom: "12px",
-                    }}
-                  >
-                    <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          color: "#64748b",
-                          textTransform: "uppercase",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Code
-                      </div>
-
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          color: "#0f172a",
-                        }}
-                      >
-                        {item.code}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          color: "#64748b",
-                          textTransform: "uppercase",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Launch Year
-                      </div>
-
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          color: "#0f172a",
-                        }}
-                      >
-                        {item.launch_year}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          color: "#64748b",
-                          textTransform: "uppercase",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Region
-                      </div>
-
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          color: "#0f172a",
-                        }}
-                      >
-                        {item.region}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          color: "#64748b",
-                          textTransform: "uppercase",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Maturity
-                      </div>
-
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          color: isEmerging
-                            ? "#d97706"
-                            : "#16a34a",
-                        }}
-                      >
-                        {item.maturity}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      borderTop: "1px solid #e2e8f0",
-                      paddingTop: "10px",
-                      fontSize: "13px",
-                      lineHeight: "1.5",
-                      color: "#64748b",
-                    }}
-                  >
-                    {item.description}
-                  </div>
-                </div>
-              </Popup>
-            </CircleMarker>
-          );
-        })}
-      </MapContainer>
+      />
     </div>
   );
 }
