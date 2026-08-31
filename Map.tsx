@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-type PaymentSystem = {
+type Scheme = {
   country: string;
   system: string;
   code: string;
@@ -12,72 +12,44 @@ type PaymentSystem = {
   region: string;
   maturity: "Mature" | "Emerging";
   description: string;
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
 };
 
-const paymentSystems: PaymentSystem[] = [
+type MapProps = {
+  schemes: Scheme[];
+};
+
+const coordinates: Record<
+  string,
   {
-    country: "United States",
-    system: "FedNow",
-    code: "US",
-    launchYear: 2023,
-    region: "North America",
-    maturity: "Emerging",
-    description:
-      "Real-time payment infrastructure operated by the Federal Reserve.",
+    lat: number;
+    lng: number;
+  }
+> = {
+  US: {
     lat: 39.8283,
     lng: -98.5795,
   },
-  {
-    country: "India",
-    system: "UPI",
-    code: "IN",
-    launchYear: 2016,
-    region: "Asia",
-    maturity: "Mature",
-    description: "India's widely adopted instant payment system.",
+  IN: {
     lat: 20.5937,
     lng: 78.9629,
   },
-  {
-    country: "United Kingdom",
-    system: "Faster Payments",
-    code: "UK",
-    launchYear: 2008,
-    region: "Europe",
-    maturity: "Mature",
-    description:
-      "UK instant payment infrastructure enabling near real-time transfers.",
+  UK: {
     lat: 55.3781,
     lng: -3.436,
   },
-  {
-    country: "Singapore",
-    system: "FAST",
-    code: "SG",
-    launchYear: 2014,
-    region: "Asia",
-    maturity: "Mature",
-    description: "Singapore's fast and secure domestic payment system.",
+  SG: {
     lat: 1.3521,
     lng: 103.8198,
   },
-  {
-    country: "Brazil",
-    system: "Pix",
-    code: "BR",
-    launchYear: 2020,
-    region: "South America",
-    maturity: "Mature",
-    description:
-      "Brazil's instant payment platform developed by the Central Bank of Brazil.",
+  BR: {
     lat: -14.235,
     lng: -51.9253,
   },
-];
+};
 
-export default function Map() {
+export default function Map({ schemes }: MapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
 
@@ -91,8 +63,8 @@ export default function Map() {
       zoom: 2,
       minZoom: 2,
       maxZoom: 6,
-      worldCopyJump: true,
       zoomControl: true,
+      worldCopyJump: true,
       attributionControl: true,
     });
 
@@ -108,106 +80,193 @@ export default function Map() {
       }
     ).addTo(map);
 
-    paymentSystems.forEach((item) => {
-      const markerColor =
-        item.maturity === "Mature" ? "#22c55e" : "#f59e0b";
+    schemes.forEach((scheme) => {
+      const fallback = coordinates[scheme.code];
 
-      const marker = L.circleMarker([item.lat, item.lng], {
+      const lat = scheme.lat ?? fallback?.lat;
+      const lng = scheme.lng ?? fallback?.lng;
+
+      if (lat === undefined || lng === undefined) {
+        return;
+      }
+
+      const isMature = scheme.maturity === "Mature";
+
+      const markerColor = isMature
+        ? "#22c55e"
+        : "#f59e0b";
+
+      const marker = L.circleMarker([lat, lng], {
         radius: 14,
         color: markerColor,
         weight: 3,
         fillColor: markerColor,
-        fillOpacity: 0.75,
+        fillOpacity: 0.8,
       });
 
       marker.bindPopup(`
-        <div style="min-width:220px;">
-          <h3 style="
-            margin:0 0 6px;
-            font-size:18px;
-            font-weight:700;
-            color:#0f172a;
-          ">
-            ${item.country}
-          </h3>
-
+        <div style="
+          min-width: 240px;
+          font-family: Arial, Helvetica, sans-serif;
+        ">
           <div style="
-            color:#2563eb;
-            font-size:16px;
-            font-weight:700;
-            margin-bottom:12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
           ">
-            ${item.system}
+            <h3 style="
+              margin: 0;
+              font-size: 19px;
+              font-weight: 700;
+              color: #0f172a;
+            ">
+              ${scheme.country}
+            </h3>
+
+            <span style="
+              padding: 5px 10px;
+              border-radius: 999px;
+              font-size: 12px;
+              font-weight: 700;
+              color: ${isMature ? "#047857" : "#b45309"};
+              background: ${isMature ? "#dcfce7" : "#fef3c7"};
+            ">
+              ${scheme.maturity}
+            </span>
           </div>
 
           <div style="
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:8px;
-            font-size:13px;
+            color: #2563eb;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 15px;
+          ">
+            ${scheme.system}
+          </div>
+
+          <div style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 13px;
+            color: #334155;
           ">
             <div>
-              <strong>Code</strong><br/>
-              ${item.code}
+              <div style="
+                color: #8aa0b9;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 3px;
+              ">
+                Code
+              </div>
+              <strong>${scheme.code}</strong>
             </div>
 
             <div>
-              <strong>Launch</strong><br/>
-              ${item.launchYear}
+              <div style="
+                color: #8aa0b9;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 3px;
+              ">
+                Launch Year
+              </div>
+              <strong>${scheme.launchYear}</strong>
             </div>
 
             <div>
-              <strong>Region</strong><br/>
-              ${item.region}
+              <div style="
+                color: #8aa0b9;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 3px;
+              ">
+                Region
+              </div>
+              <strong>${scheme.region}</strong>
             </div>
 
             <div>
-              <strong>Status</strong><br/>
-              ${item.maturity}
+              <div style="
+                color: #8aa0b9;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 3px;
+              ">
+                Maturity
+              </div>
+              <strong>${scheme.maturity}</strong>
             </div>
           </div>
 
-          <p style="
-            margin:14px 0 0;
-            padding-top:12px;
-            border-top:1px solid #e2e8f0;
-            color:#52708f;
-            line-height:1.5;
+          <div style="
+            margin-top: 16px;
+            padding-top: 13px;
+            border-top: 1px solid #e2e8f0;
+            color: #52708f;
+            font-size: 14px;
+            line-height: 1.55;
           ">
-            ${item.description}
-          </p>
+            ${scheme.description}
+          </div>
         </div>
       `);
 
       marker.addTo(map);
     });
 
-    // Very important when the map is inside a responsive container.
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
-
-    const handleResize = () => {
+    /*
+     * Leaflet sometimes calculates the map size incorrectly
+     * when the map is rendered inside a responsive container.
+     */
+    const refreshMap = () => {
       map.invalidateSize();
     };
 
-    window.addEventListener("resize", handleResize);
+    setTimeout(refreshMap, 100);
+    setTimeout(refreshMap, 500);
+    setTimeout(refreshMap, 1000);
+
+    window.addEventListener("resize", refreshMap);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", refreshMap);
+
       map.remove();
+
       mapInstanceRef.current = null;
     };
-  }, []);
+  }, [schemes]);
 
   return (
-    <div className="map-wrapper">
+    <div
+      className="map-wrapper"
+      style={{
+        width: "100%",
+        height: "560px",
+        padding: "12px",
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: "24px",
+        boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
+        overflow: "hidden",
+      }}
+    >
       <div
         ref={mapRef}
-        className="leaflet-container"
         style={{
           width: "100%",
           height: "100%",
+          minHeight: "500px",
+          borderRadius: "4px",
+          overflow: "hidden",
         }}
       />
     </div>
