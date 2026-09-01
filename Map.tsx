@@ -4,20 +4,20 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-type Scheme = {
+type MapScheme = {
   country: string;
-  system: string;
   code: string;
-  launchYear: number;
   region: string;
   maturity: "Mature" | "Emerging";
   description: string;
+  system?: string;
+  launchYear?: number;
   lat?: number;
   lng?: number;
 };
 
 type MapProps = {
-  schemes: Scheme[];
+  schemes: MapScheme[];
 };
 
 const coordinates: Record<
@@ -31,18 +31,22 @@ const coordinates: Record<
     lat: 39.8283,
     lng: -98.5795,
   },
+
   IN: {
     lat: 20.5937,
     lng: 78.9629,
   },
+
   UK: {
     lat: 55.3781,
     lng: -3.436,
   },
+
   SG: {
     lat: 1.3521,
     lng: 103.8198,
   },
+
   BR: {
     lat: -14.235,
     lng: -51.9253,
@@ -109,6 +113,7 @@ export default function Map({ schemes }: MapProps) {
           min-width: 240px;
           font-family: Arial, Helvetica, sans-serif;
         ">
+
           <div style="
             display: flex;
             justify-content: space-between;
@@ -116,6 +121,7 @@ export default function Map({ schemes }: MapProps) {
             gap: 12px;
             margin-bottom: 6px;
           ">
+
             <h3 style="
               margin: 0;
               font-size: 19px;
@@ -135,6 +141,7 @@ export default function Map({ schemes }: MapProps) {
             ">
               ${scheme.maturity}
             </span>
+
           </div>
 
           <div style="
@@ -143,7 +150,7 @@ export default function Map({ schemes }: MapProps) {
             font-weight: 700;
             margin-bottom: 15px;
           ">
-            ${scheme.system}
+            ${scheme.system ?? "Payment System"}
           </div>
 
           <div style="
@@ -153,6 +160,7 @@ export default function Map({ schemes }: MapProps) {
             font-size: 13px;
             color: #334155;
           ">
+
             <div>
               <div style="
                 color: #8aa0b9;
@@ -163,6 +171,7 @@ export default function Map({ schemes }: MapProps) {
               ">
                 Code
               </div>
+
               <strong>${scheme.code}</strong>
             </div>
 
@@ -176,7 +185,10 @@ export default function Map({ schemes }: MapProps) {
               ">
                 Launch Year
               </div>
-              <strong>${scheme.launchYear}</strong>
+
+              <strong>
+                ${scheme.launchYear ?? "—"}
+              </strong>
             </div>
 
             <div>
@@ -189,6 +201,7 @@ export default function Map({ schemes }: MapProps) {
               ">
                 Region
               </div>
+
               <strong>${scheme.region}</strong>
             </div>
 
@@ -202,8 +215,10 @@ export default function Map({ schemes }: MapProps) {
               ">
                 Maturity
               </div>
+
               <strong>${scheme.maturity}</strong>
             </div>
+
           </div>
 
           <div style="
@@ -216,16 +231,13 @@ export default function Map({ schemes }: MapProps) {
           ">
             ${scheme.description}
           </div>
+
         </div>
       `);
 
       marker.addTo(map);
     });
 
-    /*
-     * Leaflet sometimes calculates the map size incorrectly
-     * when the map is rendered inside a responsive container.
-     */
     const refreshMap = () => {
       map.invalidateSize();
     };
