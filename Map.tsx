@@ -6,12 +6,12 @@ import "leaflet/dist/leaflet.css";
 
 type MapScheme = {
   country: string;
+  system: string;
   code: string;
+  launchYear: number;
   region: string;
-  maturity: "Mature" | "Emerging";
+  maturity: string;
   description: string;
-  system?: string;
-  launchYear?: number;
   lat?: number;
   lng?: number;
 };
@@ -53,13 +53,18 @@ const coordinates: Record<
   },
 };
 
-export default function Map({ schemes }: MapProps) {
+export default function PaymentMap({ schemes }: MapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (!mapRef.current || mapInstanceRef.current) {
+    if (!mapRef.current) {
       return;
+    }
+
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
     }
 
     const map = L.map(mapRef.current, {
@@ -78,7 +83,7 @@ export default function Map({ schemes }: MapProps) {
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
         maxZoom: 19,
         noWrap: false,
       }
@@ -109,66 +114,80 @@ export default function Map({ schemes }: MapProps) {
       });
 
       marker.bindPopup(`
-        <div style="
-          min-width: 240px;
-          font-family: Arial, Helvetica, sans-serif;
-        ">
-
-          <div style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 6px;
-          ">
-
-            <h3 style="
-              margin: 0;
-              font-size: 19px;
-              font-weight: 700;
-              color: #0f172a;
-            ">
+        <div
+          style="
+            min-width: 240px;
+            font-family: Arial, Helvetica, sans-serif;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 12px;
+              margin-bottom: 6px;
+            "
+          >
+            <h3
+              style="
+                margin: 0;
+                font-size: 19px;
+                font-weight: 700;
+                color: #0f172a;
+              "
+            >
               ${scheme.country}
             </h3>
 
-            <span style="
-              padding: 5px 10px;
-              border-radius: 999px;
-              font-size: 12px;
-              font-weight: 700;
-              color: ${isMature ? "#047857" : "#b45309"};
-              background: ${isMature ? "#dcfce7" : "#fef3c7"};
-            ">
+            <span
+              style="
+                padding: 5px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 700;
+                color: ${
+                  isMature ? "#047857" : "#b45309"
+                };
+                background: ${
+                  isMature ? "#dcfce7" : "#fef3c7"
+                };
+              "
+            >
               ${scheme.maturity}
             </span>
-
           </div>
 
-          <div style="
-            color: #2563eb;
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 15px;
-          ">
-            ${scheme.system ?? "Payment System"}
+          <div
+            style="
+              color: #2563eb;
+              font-size: 17px;
+              font-weight: 700;
+              margin-bottom: 15px;
+            "
+          >
+            ${scheme.system}
           </div>
 
-          <div style="
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            font-size: 13px;
-            color: #334155;
-          ">
-
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 12px;
+              font-size: 13px;
+              color: #334155;
+            "
+          >
             <div>
-              <div style="
-                color: #8aa0b9;
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 3px;
-              ">
+              <div
+                style="
+                  color: #8aa0b9;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  margin-bottom: 3px;
+                "
+              >
                 Code
               </div>
 
@@ -176,29 +195,31 @@ export default function Map({ schemes }: MapProps) {
             </div>
 
             <div>
-              <div style="
-                color: #8aa0b9;
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 3px;
-              ">
+              <div
+                style="
+                  color: #8aa0b9;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  margin-bottom: 3px;
+                "
+              >
                 Launch Year
               </div>
 
-              <strong>
-                ${scheme.launchYear ?? "—"}
-              </strong>
+              <strong>${scheme.launchYear}</strong>
             </div>
 
             <div>
-              <div style="
-                color: #8aa0b9;
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 3px;
-              ">
+              <div
+                style="
+                  color: #8aa0b9;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  margin-bottom: 3px;
+                "
+              >
                 Region
               </div>
 
@@ -206,32 +227,34 @@ export default function Map({ schemes }: MapProps) {
             </div>
 
             <div>
-              <div style="
-                color: #8aa0b9;
-                font-size: 11px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 3px;
-              ">
+              <div
+                style="
+                  color: #8aa0b9;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  margin-bottom: 3px;
+                "
+              >
                 Maturity
               </div>
 
               <strong>${scheme.maturity}</strong>
             </div>
-
           </div>
 
-          <div style="
-            margin-top: 16px;
-            padding-top: 13px;
-            border-top: 1px solid #e2e8f0;
-            color: #52708f;
-            font-size: 14px;
-            line-height: 1.55;
-          ">
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 13px;
+              border-top: 1px solid #e2e8f0;
+              color: #52708f;
+              font-size: 14px;
+              line-height: 1.55;
+            "
+          >
             ${scheme.description}
           </div>
-
         </div>
       `);
 
@@ -243,17 +266,19 @@ export default function Map({ schemes }: MapProps) {
     };
 
     setTimeout(refreshMap, 100);
-    setTimeout(refreshMap, 500);
-    setTimeout(refreshMap, 1000);
+    setTimeout(refreshMap, 300);
+    setTimeout(refreshMap, 700);
+    setTimeout(refreshMap, 1200);
 
     window.addEventListener("resize", refreshMap);
 
     return () => {
       window.removeEventListener("resize", refreshMap);
 
-      map.remove();
-
-      mapInstanceRef.current = null;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
     };
   }, [schemes]);
 
@@ -269,6 +294,7 @@ export default function Map({ schemes }: MapProps) {
         borderRadius: "24px",
         boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
         overflow: "hidden",
+        boxSizing: "border-box",
       }}
     >
       <div
