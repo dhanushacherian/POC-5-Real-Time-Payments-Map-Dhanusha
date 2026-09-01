@@ -310,3 +310,4 @@ export default function PaymentMap({ schemes }: MapProps) {
     </div>
   );
 }
+              
