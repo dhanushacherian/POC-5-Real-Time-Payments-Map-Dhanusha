@@ -1,7 +1,6 @@
 "use client";
 
-import PaymentMap from "./map";
-
+import PaymentMap from "../Map";
 type Scheme = {
   country: string;
   system: string;
