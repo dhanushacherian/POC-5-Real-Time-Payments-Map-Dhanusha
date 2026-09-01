@@ -87,24 +87,26 @@ export default function Page() {
   ).length;
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-7xl px-6 py-10">
 
+        {/* HEADER */}
         <header className="mb-10">
           <p className="mb-3 text-sm font-bold uppercase tracking-widest text-blue-600">
             Payment Infrastructure POC
           </p>
 
-          <h1 className="text-4xl font-extrabold text-slate-900 md:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
             Real-Time Payments Map
           </h1>
 
-          <p className="mt-3 text-lg text-slate-500">
+          <p className="mt-3 max-w-3xl text-lg text-slate-500">
             Explore real-time payment systems and instant payment
             infrastructure across different countries.
           </p>
         </header>
 
+        {/* STATISTICS */}
         <section className="mb-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
           <StatCard
@@ -133,9 +135,10 @@ export default function Page() {
 
         </section>
 
+        {/* MAP */}
         <section className="mb-14">
 
-          <h2 className="text-3xl font-extrabold text-slate-900 md:text-4xl">
+          <h2 className="text-3xl font-extrabold md:text-4xl">
             Global Payment Infrastructure
           </h2>
 
@@ -143,16 +146,17 @@ export default function Page() {
             Click a marker to view payment-system details.
           </p>
 
-          <div className="mb-5 flex gap-6 text-sm font-medium text-slate-600">
+          {/* LEGEND */}
+          <div className="mb-5 flex flex-wrap gap-6 text-sm font-medium text-slate-600">
 
             <div className="flex items-center gap-2">
               <span className="h-3.5 w-3.5 rounded-full bg-green-500" />
-              Mature
+              <span>Mature</span>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="h-3.5 w-3.5 rounded-full bg-amber-500" />
-              Emerging
+              <span>Emerging</span>
             </div>
 
           </div>
@@ -161,9 +165,10 @@ export default function Page() {
 
         </section>
 
+        {/* PAYMENT SYSTEMS */}
         <section>
 
-          <h2 className="text-3xl font-extrabold text-slate-900 md:text-4xl">
+          <h2 className="text-3xl font-extrabold md:text-4xl">
             Payment Systems
           </h2>
 
@@ -179,10 +184,11 @@ export default function Page() {
                 className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
               >
 
+                {/* COUNTRY AND SYSTEM */}
                 <div className="flex items-start justify-between gap-4">
 
                   <div>
-                    <h3 className="text-2xl font-extrabold text-slate-900">
+                    <h3 className="text-2xl font-extrabold">
                       {scheme.country}
                     </h3>
 
@@ -203,6 +209,7 @@ export default function Page() {
 
                 </div>
 
+                {/* DETAILS */}
                 <div className="mt-6 grid grid-cols-2 gap-5">
 
                   <Detail
@@ -227,10 +234,13 @@ export default function Page() {
 
                 </div>
 
+                {/* DESCRIPTION */}
                 <div className="mt-6 border-t border-slate-200 pt-5">
+
                   <p className="text-sm leading-6 text-slate-500">
                     {scheme.description}
                   </p>
+
                 </div>
 
               </div>
@@ -240,6 +250,7 @@ export default function Page() {
 
         </section>
 
+        {/* FOOTER */}
         <footer className="mt-16 border-t border-slate-200 pt-6 text-center text-sm text-slate-400">
           Real-Time Payments Map • Proof of Concept
         </footer>
