@@ -1,6 +1,10 @@
 "use client";
 
-import PaymentMap from "../Map";
+import dynamic from "next/dynamic";
+
+const PaymentMap = dynamic(() => import("../Map"), {
+  ssr: false,
+});
 
 type Scheme = {
   country: string;
