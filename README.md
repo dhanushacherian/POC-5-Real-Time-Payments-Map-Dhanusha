@@ -82,7 +82,6 @@ POC-5-Real-Time-Payments-Map-Dhanusha/
 │   └── page.tsx
 │
 ├── architecture/
-│
 ├── screenshots/
 │
 ├── Map.tsx
