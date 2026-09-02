@@ -2,7 +2,7 @@ PAYMENT_SCHEMES = [
     {
         "country": "United States",
         "code": "US",
-        "scheme": "FedNow",
+        "system": "FedNow",
         "launch_year": 2023,
         "maturity": "Emerging",
         "region": "North America",
@@ -11,7 +11,7 @@ PAYMENT_SCHEMES = [
     {
         "country": "India",
         "code": "IN",
-        "scheme": "UPI",
+        "system": "UPI",
         "launch_year": 2016,
         "maturity": "Mature",
         "region": "Asia",
@@ -19,8 +19,8 @@ PAYMENT_SCHEMES = [
     },
     {
         "country": "United Kingdom",
-        "code": "GB",
-        "scheme": "Faster Payments",
+        "code": "UK",
+        "system": "Faster Payments",
         "launch_year": 2008,
         "maturity": "Mature",
         "region": "Europe",
@@ -29,7 +29,7 @@ PAYMENT_SCHEMES = [
     {
         "country": "Singapore",
         "code": "SG",
-        "scheme": "FAST",
+        "system": "FAST",
         "launch_year": 2014,
         "maturity": "Mature",
         "region": "Asia",
@@ -38,7 +38,7 @@ PAYMENT_SCHEMES = [
     {
         "country": "Brazil",
         "code": "BR",
-        "scheme": "Pix",
+        "system": "Pix",
         "launch_year": 2020,
         "maturity": "Mature",
         "region": "South America",
