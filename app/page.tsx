@@ -103,206 +103,392 @@ export default function Page() {
     (scheme) => scheme.maturity === "Emerging"
   ).length;
 
+  const downloadSampleData = () => {
+    const headers = [
+      "Country",
+      "Payment System",
+      "Code",
+      "Launch Year",
+      "Region",
+      "Maturity",
+      "Description",
+    ];
+
+    const rows = schemes.map((scheme) => [
+      scheme.country,
+      scheme.system,
+      scheme.code,
+      scheme.launchYear,
+      scheme.region,
+      scheme.maturity,
+      scheme.description,
+    ]);
+
+    const csv = [
+      headers.join(","),
+      ...rows.map((row) =>
+        row
+          .map((value) =>
+            `"${String(value).replace(/"/g, '""')}"`
+          )
+          .join(",")
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "real-time-payments-sample-data.csv";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="mx-auto max-w-7xl px-6 py-10">
+    <main className="min-h-screen bg-[#030712] text-slate-100">
+      <div className="mx-auto max-w-[1600px] px-5 py-8 lg:px-8">
 
-        <header className="mb-10">
-          <p className="mb-3 text-sm font-bold uppercase tracking-widest text-blue-600">
-            Payment Infrastructure POC
+        {/* HEADER */}
+        <header className="mb-8 border-b border-slate-800 pb-7">
+          <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-sky-400">
+            Real Rails • Payment Infrastructure Intelligence
           </p>
 
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
-            Real-Time Payments Map
-          </h1>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                Real-Time Payments Map
+              </h1>
 
-          <p className="mt-3 max-w-3xl text-lg text-slate-500">
-            Explore real-time payment systems and instant payment
-            infrastructure across different countries.
-          </p>
+              <p className="mt-3 max-w-3xl text-base leading-7 text-slate-400 md:text-lg">
+                Intelligence view of real-time payment infrastructure,
+                launch maturity, and institutional control across key markets.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800 bg-[#0B1117] px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Systems Tracked
+              </p>
+
+              <p className="mt-1 text-3xl font-extrabold text-sky-400">
+                {schemes.length}
+              </p>
+            </div>
+          </div>
         </header>
 
-        <section className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            title="Countries"
-            value={schemes.length}
-            description="Payment markets tracked"
-          />
+        {/* 70 / 30 LAYOUT */}
+        <div className="grid lg:grid-cols-[7fr_3fr]">
 
-          <StatCard
-            title="Payment Systems"
-            value={schemes.length}
-            description="Real-time schemes"
-          />
+          {/* MAIN STAGE - 70% */}
+          <section className="min-w-0 lg:pr-7">
 
-          <StatCard
-            title="Mature Systems"
-            value={matureSystems}
-            description="Established infrastructure"
-          />
+            {/* KPI CARDS */}
+            <section className="mb-8 grid grid-cols-2 gap-4 xl:grid-cols-4">
 
-          <StatCard
-            title="Emerging Systems"
-            value={emergingSystems}
-            description="Developing infrastructure"
-          />
-        </section>
-
-        <section className="mb-10 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-
-            <div>
-              <h2 className="text-xl font-extrabold text-slate-900">
-                Filter Payment Systems
-              </h2>
-
-              <p className="mt-1 text-sm text-slate-500">
-                Filter the map and payment-system cards by maturity.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <FilterButton
-                label="All"
-                active={maturityFilter === "All"}
-                onClick={() => setMaturityFilter("All")}
+              <KpiCard
+                title="Countries"
+                value={schemes.length}
+                description="Markets tracked"
               />
 
-              <FilterButton
-                label="Mature"
-                active={maturityFilter === "Mature"}
-                onClick={() => setMaturityFilter("Mature")}
+              <KpiCard
+                title="Payment Systems"
+                value={schemes.length}
+                description="Instant rails"
               />
 
-              <FilterButton
-                label="Emerging"
-                active={maturityFilter === "Emerging"}
-                onClick={() => setMaturityFilter("Emerging")}
+              <KpiCard
+                title="Mature"
+                value={matureSystems}
+                description="Established rails"
               />
-            </div>
 
-          </div>
-        </section>
+              <KpiCard
+                title="Emerging"
+                value={emergingSystems}
+                description="Developing rails"
+              />
 
-        <section className="mb-14">
-          <h2 className="text-3xl font-extrabold md:text-4xl">
-            Global Payment Infrastructure
-          </h2>
+            </section>
 
-          <p className="mb-5 mt-2 text-lg text-slate-500">
-            Click a marker to view payment-system details.
-          </p>
+            {/* MAP */}
+            <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5 shadow-2xl">
+              <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
+                    Main Stage
+                  </p>
 
-          <div className="mb-5 flex flex-wrap gap-6 text-sm font-medium text-slate-600">
-            <div className="flex items-center gap-2">
-              <span className="h-3.5 w-3.5 rounded-full bg-green-500" />
-              <span>Mature</span>
-            </div>
+                  <h2 className="mt-1 text-2xl font-extrabold text-white md:text-3xl">
+                    Global Payment Infrastructure
+                  </h2>
 
-            <div className="flex items-center gap-2">
-              <span className="h-3.5 w-3.5 rounded-full bg-amber-500" />
-              <span>Emerging</span>
-            </div>
-          </div>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Select a rail marker to inspect infrastructure details.
+                  </p>
+                </div>
 
-          <PaymentMap schemes={filteredSchemes} />
-        </section>
-
-        <section>
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="text-3xl font-extrabold md:text-4xl">
-                Payment Systems
-              </h2>
-
-              <p className="mt-2 text-lg text-slate-500">
-                Overview of the real-time payment systems represented on the map.
-              </p>
-            </div>
-
-            <p className="text-sm font-semibold text-slate-500">
-              Showing {filteredSchemes.length} of {schemes.length} systems
-            </p>
-          </div>
-
-          {filteredSchemes.length === 0 ? (
-            <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
-              <p className="text-lg font-semibold text-slate-600">
-                No payment systems match this filter.
-              </p>
-            </div>
-          ) : (
-            <div className="mt-7 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {filteredSchemes.map((scheme) => (
-                <div
-                  key={scheme.code}
-                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-2xl font-extrabold">
-                        {scheme.country}
-                      </h3>
-
-                      <p className="mt-1 text-lg font-bold text-blue-600">
-                        {scheme.system}
-                      </p>
-                    </div>
-
-                    <span
-                      className={
-                        scheme.maturity === "Mature"
-                          ? "rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700"
-                          : "rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700"
-                      }
-                    >
-                      {scheme.maturity}
-                    </span>
+                <div className="flex items-center gap-5 text-sm text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="h-3 w-3 rounded-full bg-green-500" />
+                    Mature
                   </div>
 
-                  <div className="mt-6 grid grid-cols-2 gap-5">
-                    <Detail
-                      label="Code"
-                      value={scheme.code}
-                    />
-
-                    <Detail
-                      label="Launch Year"
-                      value={String(scheme.launchYear)}
-                    />
-
-                    <Detail
-                      label="Region"
-                      value={scheme.region}
-                    />
-
-                    <Detail
-                      label="Maturity"
-                      value={scheme.maturity}
-                    />
-                  </div>
-
-                  <div className="mt-6 border-t border-slate-200 pt-5">
-                    <p className="text-sm leading-6 text-slate-500">
-                      {scheme.description}
-                    </p>
+                  <div className="flex items-center gap-2">
+                    <span className="h-3 w-3 rounded-full bg-amber-500" />
+                    Emerging
                   </div>
                 </div>
-              ))}
+              </div>
+
+              <PaymentMap schemes={filteredSchemes} />
+            </section>
+
+            {/* PAYMENT SYSTEMS */}
+            <section className="mt-8">
+              <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
+                    Rail Inventory
+                  </p>
+
+                  <h2 className="mt-1 text-2xl font-extrabold text-white md:text-3xl">
+                    Payment Systems
+                  </h2>
+                </div>
+
+                <p className="text-sm font-semibold text-slate-500">
+                  Showing {filteredSchemes.length} of {schemes.length}
+                </p>
+              </div>
+
+              {filteredSchemes.length === 0 ? (
+                <div className="rounded-2xl border border-slate-800 bg-[#0B1117] p-10 text-center">
+                  <p className="text-slate-400">
+                    No payment systems match this filter.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+
+                  {filteredSchemes.map((scheme) => (
+                    <div
+                      key={scheme.code}
+                      className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                            {scheme.country}
+                          </p>
+
+                          <h3 className="mt-1 text-xl font-extrabold text-white">
+                            {scheme.system}
+                          </h3>
+                        </div>
+
+                        <span
+                          className={
+                            scheme.maturity === "Mature"
+                              ? "rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-xs font-bold text-green-400"
+                              : "rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400"
+                          }
+                        >
+                          {scheme.maturity}
+                        </span>
+                      </div>
+
+                      <div className="mt-5 grid grid-cols-2 gap-4">
+                        <DarkDetail
+                          label="Code"
+                          value={scheme.code}
+                        />
+
+                        <DarkDetail
+                          label="Launch Year"
+                          value={String(scheme.launchYear)}
+                        />
+
+                        <DarkDetail
+                          label="Region"
+                          value={scheme.region}
+                        />
+
+                        <DarkDetail
+                          label="Maturity"
+                          value={scheme.maturity}
+                        />
+                      </div>
+
+                      <div className="mt-5 border-t border-slate-800 pt-4">
+                        <p className="text-sm leading-6 text-slate-400">
+                          {scheme.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+
+                </div>
+              )}
+            </section>
+          </section>
+
+          {/* INTELLIGENCE SIDEBAR - 30% */}
+          <aside className="mt-8 min-w-0 border-slate-800 lg:mt-0 lg:border-l lg:pl-7">
+
+            <div className="sticky top-6 space-y-5">
+
+              {/* SIDEBAR HEADER */}
+              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
+                  Intelligence Sidebar
+                </p>
+
+                <h2 className="mt-2 text-2xl font-extrabold text-white">
+                  Payment Rail Signals
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  A compact intelligence layer translating the map into
+                  infrastructure and governance signals.
+                </p>
+              </section>
+
+              {/* WHY THIS MATTERS */}
+              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-400">
+                  Why This Matters
+                </p>
+
+                <h3 className="mt-2 text-lg font-extrabold text-white">
+                  Instant rails are strategic infrastructure
+                </h3>
+
+                <p className="mt-3 text-sm leading-6 text-slate-400">
+                  Real-time payment rails determine how quickly money moves
+                  between consumers, businesses, banks, and public institutions.
+                  Their launch timing and maturity indicate how developed a
+                  market's instant-payment infrastructure has become.
+                </p>
+              </section>
+
+              {/* WHO CONTROLS THE RAIL */}
+              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-400">
+                  Who Controls the Rail
+                </p>
+
+                <h3 className="mt-2 text-lg font-extrabold text-white">
+                  Central institutions shape access
+                </h3>
+
+                <p className="mt-3 text-sm leading-6 text-slate-400">
+                  Payment rails are governed by central banks, national
+                  payment operators, and regulated financial institutions.
+                  Governance determines participation, standards, settlement
+                  rules, and the operating model of the infrastructure.
+                </p>
+              </section>
+
+              {/* FILTERS */}
+              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
+                    Filters
+                  </p>
+
+                  <h3 className="mt-2 text-lg font-extrabold text-white">
+                    Maturity Lens
+                  </h3>
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-2">
+
+                  <SidebarFilter
+                    label="All"
+                    active={maturityFilter === "All"}
+                    onClick={() => setMaturityFilter("All")}
+                  />
+
+                  <SidebarFilter
+                    label="Mature"
+                    active={maturityFilter === "Mature"}
+                    onClick={() => setMaturityFilter("Mature")}
+                  />
+
+                  <SidebarFilter
+                    label="Emerging"
+                    active={maturityFilter === "Emerging"}
+                    onClick={() => setMaturityFilter("Emerging")}
+                  />
+
+                </div>
+
+                <div className="mt-4 rounded-xl border border-slate-800 bg-[#030712] p-4">
+                  <p className="text-xs uppercase tracking-wider text-slate-500">
+                    Current view
+                  </p>
+
+                  <p className="mt-1 text-lg font-bold text-white">
+                    {maturityFilter}
+                  </p>
+
+                  <p className="mt-1 text-sm text-slate-400">
+                    {filteredSchemes.length} rail
+                    {filteredSchemes.length === 1 ? "" : "s"} visible
+                  </p>
+                </div>
+              </section>
+
+              {/* DOWNLOAD */}
+              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
+                  Data Access
+                </p>
+
+                <h3 className="mt-2 text-lg font-extrabold text-white">
+                  Sample Dataset
+                </h3>
+
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  Download the structured payment-rail dataset used in this
+                  proof of concept.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={downloadSampleData}
+                  className="mt-4 w-full rounded-xl bg-sky-500 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-sky-400"
+                >
+                  Download Sample Data
+                </button>
+              </section>
+
             </div>
-          )}
-        </section>
+          </aside>
+        </div>
 
-        <footer className="mt-16 border-t border-slate-200 pt-6 text-center text-sm text-slate-400">
-          Real-Time Payments Map • Proof of Concept
+        {/* FOOTER */}
+        <footer className="mt-10 border-t border-slate-800 pt-5 text-center text-xs text-slate-600">
+          Real Rails • Real-Time Payments Map • Phase 1 Proof of Concept
         </footer>
-
       </div>
     </main>
   );
 }
 
-function StatCard({
+function KpiCard({
   title,
   value,
   description,
@@ -312,23 +498,23 @@ function StatCard({
   description: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <p className="text-sm font-semibold text-slate-500">
+    <div className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
         {title}
       </p>
 
-      <p className="mt-3 text-4xl font-extrabold text-slate-900">
+      <p className="mt-3 text-3xl font-extrabold text-white">
         {value}
       </p>
 
-      <p className="mt-2 text-sm text-slate-400">
+      <p className="mt-2 text-xs text-slate-500">
         {description}
       </p>
     </div>
   );
 }
 
-function Detail({
+function DarkDetail({
   label,
   value,
 }: {
@@ -337,18 +523,18 @@ function Detail({
 }) {
   return (
     <div>
-      <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
         {label}
       </p>
 
-      <p className="mt-1 text-sm font-bold text-slate-700">
+      <p className="mt-1 text-sm font-bold text-slate-200">
         {value}
       </p>
     </div>
   );
 }
 
-function FilterButton({
+function SidebarFilter({
   label,
   active,
   onClick,
@@ -363,8 +549,8 @@ function FilterButton({
       onClick={onClick}
       className={
         active
-          ? "rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm"
-          : "rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50"
+          ? "rounded-lg bg-sky-500 px-3 py-2.5 text-xs font-bold text-slate-950"
+          : "rounded-lg border border-slate-700 bg-[#030712] px-3 py-2.5 text-xs font-bold text-slate-400 hover:border-sky-500/50 hover:text-white"
       }
     >
       {label}
