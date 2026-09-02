@@ -107,7 +107,6 @@ export default function Page() {
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-7xl px-6 py-10">
 
-        {/* HEADER */}
         <header className="mb-10">
           <p className="mb-3 text-sm font-bold uppercase tracking-widest text-blue-600">
             Payment Infrastructure POC
@@ -123,9 +122,7 @@ export default function Page() {
           </p>
         </header>
 
-        {/* STATISTICS */}
         <section className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
           <StatCard
             title="Countries"
             value={schemes.length}
@@ -149,10 +146,8 @@ export default function Page() {
             value={emergingSystems}
             description="Developing infrastructure"
           />
-
         </section>
 
-        {/* FILTER */}
         <section className="mb-10 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
@@ -189,9 +184,7 @@ export default function Page() {
           </div>
         </section>
 
-        {/* MAP */}
         <section className="mb-14">
-
           <h2 className="text-3xl font-extrabold md:text-4xl">
             Global Payment Infrastructure
           </h2>
@@ -200,9 +193,7 @@ export default function Page() {
             Click a marker to view payment-system details.
           </p>
 
-          {/* LEGEND */}
           <div className="mb-5 flex flex-wrap gap-6 text-sm font-medium text-slate-600">
-
             <div className="flex items-center gap-2">
               <span className="h-3.5 w-3.5 rounded-full bg-green-500" />
               <span>Mature</span>
@@ -212,18 +203,13 @@ export default function Page() {
               <span className="h-3.5 w-3.5 rounded-full bg-amber-500" />
               <span>Emerging</span>
             </div>
-
           </div>
 
           <PaymentMap schemes={filteredSchemes} />
-
         </section>
 
-        {/* PAYMENT SYSTEMS */}
         <section>
-
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-
             <div>
               <h2 className="text-3xl font-extrabold md:text-4xl">
                 Payment Systems
@@ -237,7 +223,6 @@ export default function Page() {
             <p className="text-sm font-semibold text-slate-500">
               Showing {filteredSchemes.length} of {schemes.length} systems
             </p>
-
           </div>
 
           {filteredSchemes.length === 0 ? (
@@ -248,16 +233,12 @@ export default function Page() {
             </div>
           ) : (
             <div className="mt-7 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-
               {filteredSchemes.map((scheme) => (
                 <div
                   key={scheme.code}
                   className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
                 >
-
-                  {/* COUNTRY AND SYSTEM */}
                   <div className="flex items-start justify-between gap-4">
-
                     <div>
                       <h3 className="text-2xl font-extrabold">
                         {scheme.country}
@@ -277,12 +258,9 @@ export default function Page() {
                     >
                       {scheme.maturity}
                     </span>
-
                   </div>
 
-                  {/* DETAILS */}
                   <div className="mt-6 grid grid-cols-2 gap-5">
-
                     <Detail
                       label="Code"
                       value={scheme.code}
@@ -302,27 +280,19 @@ export default function Page() {
                       label="Maturity"
                       value={scheme.maturity}
                     />
-
                   </div>
 
-                  {/* DESCRIPTION */}
                   <div className="mt-6 border-t border-slate-200 pt-5">
-
                     <p className="text-sm leading-6 text-slate-500">
                       {scheme.description}
                     </p>
-
                   </div>
-
                 </div>
               ))}
-
             </div>
           )}
-
         </section>
 
-        {/* FOOTER */}
         <footer className="mt-16 border-t border-slate-200 pt-6 text-center text-sm text-slate-400">
           Real-Time Payments Map • Proof of Concept
         </footer>
@@ -343,7 +313,6 @@ function StatCard({
 }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-
       <p className="text-sm font-semibold text-slate-500">
         {title}
       </p>
@@ -355,7 +324,6 @@ function StatCard({
       <p className="mt-2 text-sm text-slate-400">
         {description}
       </p>
-
     </div>
   );
 }
@@ -369,5 +337,37 @@ function Detail({
 }) {
   return (
     <div>
+      <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+        {label}
+      </p>
 
-      <p className="
+      <p className="mt-1 text-sm font-bold text-slate-700">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function FilterButton({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        active
+          ? "rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm"
+          : "rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50"
+      }
+    >
+      {label}
+    </button>
+  );
+}
