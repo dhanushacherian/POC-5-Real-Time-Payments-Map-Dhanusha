@@ -128,9 +128,7 @@ export default function Page() {
       headers.join(","),
       ...rows.map((row) =>
         row
-          .map((value) =>
-            `"${String(value).replace(/"/g, '""')}"`
-          )
+          .map((value) => `"${String(value).replace(/"/g, '""')}"`)
           .join(",")
       ),
     ].join("\n");
@@ -162,8 +160,8 @@ export default function Page() {
             Real Rails • Payment Infrastructure Intelligence
           </p>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
+          <div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="min-w-0">
               <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
                 Real-Time Payments Map
               </h1>
@@ -174,7 +172,7 @@ export default function Page() {
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-800 bg-[#0B1117] px-5 py-4">
+            <div className="w-full shrink-0 rounded-xl border border-slate-800 bg-[#0B1117] px-5 py-4 lg:w-40">
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Systems Tracked
               </p>
@@ -187,7 +185,7 @@ export default function Page() {
         </header>
 
         {/* 70 / 30 LAYOUT */}
-        <div className="grid lg:grid-cols-[7fr_3fr]">
+        <div className="grid min-w-0 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
 
           {/* MAIN STAGE - 70% */}
           <section className="min-w-0 lg:pr-7">
@@ -222,9 +220,9 @@ export default function Page() {
             </section>
 
             {/* MAP */}
-            <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5 shadow-2xl">
-              <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-                <div>
+            <section className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5 shadow-2xl">
+              <div className="mb-5 flex min-w-0 flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                <div className="min-w-0">
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
                     Main Stage
                   </p>
@@ -238,7 +236,7 @@ export default function Page() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-5 text-sm text-slate-400">
+                <div className="flex shrink-0 items-center gap-5 text-sm text-slate-400">
                   <div className="flex items-center gap-2">
                     <span className="h-3 w-3 rounded-full bg-green-500" />
                     Mature
@@ -251,13 +249,15 @@ export default function Page() {
                 </div>
               </div>
 
-              <PaymentMap schemes={filteredSchemes} />
+              <div className="min-w-0 overflow-hidden rounded-2xl">
+                <PaymentMap schemes={filteredSchemes} />
+              </div>
             </section>
 
             {/* PAYMENT SYSTEMS */}
-            <section className="mt-8">
-              <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-                <div>
+            <section className="mt-8 min-w-0">
+              <div className="mb-5 flex min-w-0 flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div className="min-w-0">
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
                     Rail Inventory
                   </p>
@@ -267,7 +267,7 @@ export default function Page() {
                   </h2>
                 </div>
 
-                <p className="text-sm font-semibold text-slate-500">
+                <p className="shrink-0 text-sm font-semibold text-slate-500">
                   Showing {filteredSchemes.length} of {schemes.length}
                 </p>
               </div>
@@ -279,21 +279,21 @@ export default function Page() {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                <div className="grid min-w-0 grid-cols-1 gap-5 xl:grid-cols-2">
 
                   {filteredSchemes.map((scheme) => (
                     <div
                       key={scheme.code}
-                      className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5"
+                      className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5"
                     >
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex min-w-0 items-start justify-between gap-4">
 
-                        <div>
+                        <div className="min-w-0">
                           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                             {scheme.country}
                           </p>
 
-                          <h3 className="mt-1 text-xl font-extrabold text-white">
+                          <h3 className="mt-1 break-words text-xl font-extrabold text-white">
                             {scheme.system}
                           </h3>
                         </div>
@@ -301,8 +301,8 @@ export default function Page() {
                         <span
                           className={
                             scheme.maturity === "Mature"
-                              ? "rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-xs font-bold text-green-400"
-                              : "rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400"
+                              ? "shrink-0 rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-xs font-bold text-green-400"
+                              : "shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400"
                           }
                         >
                           {scheme.maturity}
@@ -347,15 +347,15 @@ export default function Page() {
           {/* INTELLIGENCE SIDEBAR - 30% */}
           <aside className="mt-8 min-w-0 border-slate-800 lg:mt-0 lg:border-l lg:pl-7">
 
-            <div className="sticky top-6 space-y-5">
+            <div className="min-w-0 space-y-5">
 
               {/* SIDEBAR HEADER */}
-              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+              <section className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
                   Intelligence Sidebar
                 </p>
 
-                <h2 className="mt-2 text-2xl font-extrabold text-white">
+                <h2 className="mt-2 break-words text-2xl font-extrabold text-white">
                   Payment Rail Signals
                 </h2>
 
@@ -366,12 +366,12 @@ export default function Page() {
               </section>
 
               {/* WHY THIS MATTERS */}
-              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+              <section className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-400">
                   Why This Matters
                 </p>
 
-                <h3 className="mt-2 text-lg font-extrabold text-white">
+                <h3 className="mt-2 break-words text-lg font-extrabold text-white">
                   Instant rails are strategic infrastructure
                 </h3>
 
@@ -384,12 +384,12 @@ export default function Page() {
               </section>
 
               {/* WHO CONTROLS THE RAIL */}
-              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+              <section className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-400">
                   Who Controls the Rail
                 </p>
 
-                <h3 className="mt-2 text-lg font-extrabold text-white">
+                <h3 className="mt-2 break-words text-lg font-extrabold text-white">
                   Central institutions shape access
                 </h3>
 
@@ -402,7 +402,7 @@ export default function Page() {
               </section>
 
               {/* FILTERS */}
-              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+              <section className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
                     Filters
@@ -452,12 +452,12 @@ export default function Page() {
               </section>
 
               {/* DOWNLOAD */}
-              <section className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+              <section className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-400">
                   Data Access
                 </p>
 
-                <h3 className="mt-2 text-lg font-extrabold text-white">
+                <h3 className="mt-2 break-words text-lg font-extrabold text-white">
                   Sample Dataset
                 </h3>
 
@@ -498,7 +498,7 @@ function KpiCard({
   description: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
+    <div className="min-w-0 rounded-2xl border border-slate-800 bg-[#0B1117] p-5">
       <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
         {title}
       </p>
@@ -522,12 +522,12 @@ function DarkDetail({
   value: string;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
         {label}
       </p>
 
-      <p className="mt-1 text-sm font-bold text-slate-200">
+      <p className="mt-1 break-words text-sm font-bold text-slate-200">
         {value}
       </p>
     </div>
