@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-type MapScheme = {
+type Scheme = {
   country: string;
   system: string;
   code: string;
@@ -16,8 +16,8 @@ type MapScheme = {
   lng?: number;
 };
 
-type MapProps = {
-  schemes: MapScheme[];
+type PaymentMapProps = {
+  schemes: Scheme[];
 };
 
 const coordinates: Record<
@@ -31,50 +31,43 @@ const coordinates: Record<
     lat: 39.8283,
     lng: -98.5795,
   },
-
   IN: {
     lat: 20.5937,
     lng: 78.9629,
   },
-
   UK: {
     lat: 55.3781,
     lng: -3.436,
   },
-
   SG: {
     lat: 1.3521,
     lng: 103.8198,
   },
-
   BR: {
     lat: -14.235,
     lng: -51.9253,
   },
 };
 
-export default function PaymentMap({ schemes }: MapProps) {
+export default function PaymentMap({
+  schemes,
+}: PaymentMapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (!mapRef.current) {
+    if (!mapRef.current || mapInstanceRef.current) {
       return;
     }
 
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
-      mapInstanceRef.current = null;
-    }
-
     const map = L.map(mapRef.current, {
-      center: [20, 10],
+      center: [20, 0],
       zoom: 2,
       minZoom: 2,
       maxZoom: 6,
       zoomControl: true,
-      worldCopyJump: true,
       attributionControl: true,
+      worldCopyJump: false,
     });
 
     mapInstanceRef.current = map;
@@ -83,9 +76,8 @@ export default function PaymentMap({ schemes }: MapProps) {
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
-        noWrap: false,
       }
     ).addTo(map);
 
@@ -99,202 +91,143 @@ export default function PaymentMap({ schemes }: MapProps) {
         return;
       }
 
-      const isMature = scheme.maturity === "Mature";
+      const isMature =
+        scheme.maturity === "Mature";
 
       const markerColor = isMature
         ? "#22c55e"
         : "#f59e0b";
 
-      const marker = L.circleMarker([lat, lng], {
-        radius: 14,
-        color: markerColor,
-        weight: 3,
-        fillColor: markerColor,
-        fillOpacity: 0.8,
-      });
+      const marker = L.circleMarker(
+        [lat, lng],
+        {
+          radius: 13,
+          color: markerColor,
+          weight: 3,
+          fillColor: markerColor,
+          fillOpacity: 0.78,
+        }
+      );
 
       marker.bindPopup(`
-        <div
-          style="
-            min-width: 240px;
-            font-family: Arial, Helvetica, sans-serif;
-          "
-        >
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              gap: 12px;
-              margin-bottom: 6px;
-            "
-          >
-            <h3
-              style="
-                margin: 0;
-                font-size: 19px;
-                font-weight: 700;
-                color: #0f172a;
-              "
-            >
-              ${scheme.country}
-            </h3>
+        <div style="
+          min-width:220px;
+          font-family:Arial,Helvetica,sans-serif;
+        ">
 
-            <span
-              style="
-                padding: 5px 10px;
-                border-radius: 999px;
-                font-size: 12px;
-                font-weight: 700;
-                color: ${
-                  isMature ? "#047857" : "#b45309"
-                };
-                background: ${
-                  isMature ? "#dcfce7" : "#fef3c7"
-                };
-              "
-            >
-              ${scheme.maturity}
-            </span>
-          </div>
+          <h3 style="
+            margin:0 0 6px;
+            font-size:18px;
+            font-weight:700;
+            color:#0f172a;
+          ">
+            ${scheme.country}
+          </h3>
 
-          <div
-            style="
-              color: #2563eb;
-              font-size: 17px;
-              font-weight: 700;
-              margin-bottom: 15px;
-            "
-          >
+          <div style="
+            margin-bottom:12px;
+            color:#2563eb;
+            font-size:16px;
+            font-weight:700;
+          ">
             ${scheme.system}
           </div>
 
-          <div
-            style="
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 12px;
-              font-size: 13px;
-              color: #334155;
-            "
-          >
-            <div>
-              <div
-                style="
-                  color: #8aa0b9;
-                  font-size: 11px;
-                  font-weight: 700;
-                  text-transform: uppercase;
-                  margin-bottom: 3px;
-                "
-              >
-                Code
-              </div>
+          <div style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:10px;
+            font-size:13px;
+            color:#334155;
+          ">
 
+            <div>
+              <span style="color:#94a3b8;">
+                Code
+              </span>
+              <br />
               <strong>${scheme.code}</strong>
             </div>
 
             <div>
-              <div
-                style="
-                  color: #8aa0b9;
-                  font-size: 11px;
-                  font-weight: 700;
-                  text-transform: uppercase;
-                  margin-bottom: 3px;
-                "
-              >
+              <span style="color:#94a3b8;">
                 Launch Year
-              </div>
-
+              </span>
+              <br />
               <strong>${scheme.launchYear}</strong>
             </div>
 
             <div>
-              <div
-                style="
-                  color: #8aa0b9;
-                  font-size: 11px;
-                  font-weight: 700;
-                  text-transform: uppercase;
-                  margin-bottom: 3px;
-                "
-              >
+              <span style="color:#94a3b8;">
                 Region
-              </div>
-
+              </span>
+              <br />
               <strong>${scheme.region}</strong>
             </div>
 
             <div>
-              <div
-                style="
-                  color: #8aa0b9;
-                  font-size: 11px;
-                  font-weight: 700;
-                  text-transform: uppercase;
-                  margin-bottom: 3px;
-                "
-              >
+              <span style="color:#94a3b8;">
                 Maturity
-              </div>
-
+              </span>
+              <br />
               <strong>${scheme.maturity}</strong>
             </div>
+
           </div>
 
-          <div
-            style="
-              margin-top: 16px;
-              padding-top: 13px;
-              border-top: 1px solid #e2e8f0;
-              color: #52708f;
-              font-size: 14px;
-              line-height: 1.55;
-            "
-          >
+          <p style="
+            margin:14px 0 0;
+            padding-top:12px;
+            border-top:1px solid #e2e8f0;
+            color:#64748b;
+            font-size:13px;
+            line-height:1.5;
+          ">
             ${scheme.description}
-          </div>
+          </p>
+
         </div>
       `);
 
       marker.addTo(map);
     });
 
-    const refreshMap = () => {
+    const updateMapSize = () => {
       map.invalidateSize();
     };
 
-    setTimeout(refreshMap, 100);
-    setTimeout(refreshMap, 300);
-    setTimeout(refreshMap, 700);
-    setTimeout(refreshMap, 1200);
+    setTimeout(updateMapSize, 100);
+    setTimeout(updateMapSize, 500);
+    setTimeout(updateMapSize, 1000);
 
-    window.addEventListener("resize", refreshMap);
+    window.addEventListener(
+      "resize",
+      updateMapSize
+    );
 
     return () => {
-      window.removeEventListener("resize", refreshMap);
+      window.removeEventListener(
+        "resize",
+        updateMapSize
+      );
 
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
+      map.remove();
+      mapInstanceRef.current = null;
     };
   }, [schemes]);
 
   return (
     <div
-      className="map-wrapper"
       style={{
         width: "100%",
         height: "560px",
-        padding: "12px",
         background: "#ffffff",
         border: "1px solid #e2e8f0",
         borderRadius: "24px",
-        boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
+        padding: "10px",
+        boxShadow:
+          "0 10px 30px rgba(15,23,42,0.08)",
         overflow: "hidden",
-        boxSizing: "border-box",
       }}
     >
       <div
@@ -302,12 +235,10 @@ export default function PaymentMap({ schemes }: MapProps) {
         style={{
           width: "100%",
           height: "100%",
-          minHeight: "500px",
-          borderRadius: "4px",
+          borderRadius: "16px",
           overflow: "hidden",
         }}
       />
     </div>
   );
 }
-              
