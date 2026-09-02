@@ -19,6 +19,7 @@ The Real-Time Payments Map tracks five payment systems:
 ## Features
 
 ### Interactive Global Map
+
 - Interactive Leaflet-based world map
 - Payment-system markers by country
 - Green markers for mature rails
@@ -26,18 +27,21 @@ The Real-Time Payments Map tracks five payment systems:
 - Click markers to view payment-system details
 
 ### Intelligence Layer
+
 - "Why This Matters" infrastructure context
 - "Who Controls the Rail" governance context
 - Payment rail summary metrics
 - Maturity-based infrastructure view
 
 ### Interactive Filtering
+
 - All
 - Mature
 - Emerging
-- Filter updates the map and payment-system cards without a full page refresh
+- Filters update the map and payment-system cards without a full page refresh
 
 ### Sample Data Download
+
 The dashboard includes a downloadable CSV containing the structured payment-rail dataset used by the application.
 
 ## Dashboard
@@ -54,6 +58,7 @@ The interface follows the Real Rails dashboard approach with:
 ## Technology Stack
 
 ### Frontend
+
 - Next.js
 - React
 - TypeScript
@@ -61,6 +66,7 @@ The interface follows the Real Rails dashboard approach with:
 - Leaflet
 
 ### Backend / Data
+
 - FastAPI
 - Python
 - Pandas
