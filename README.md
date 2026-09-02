@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Real-Time Payments Map
 
-## Getting Started
+A Phase 1 Proof of Concept for exploring real-time payment infrastructure across key global markets.
 
-First, run the development server:
+The application combines an interactive global map, payment-rail metadata, maturity filtering, infrastructure intelligence, and downloadable sample data in a Real Rails-style dashboard.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The Real-Time Payments Map tracks five payment systems:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Country | Payment System | Code | Launch Year | Region | Maturity |
+|---|---|---|---:|---|---|
+| United States | FedNow | US | 2023 | North America | Emerging |
+| India | UPI | IN | 2016 | Asia | Mature |
+| United Kingdom | Faster Payments | UK | 2008 | Europe | Mature |
+| Singapore | FAST | SG | 2014 | Asia | Mature |
+| Brazil | Pix | BR | 2020 | South America | Mature |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
 
-## Learn More
+### Interactive Global Map
+- Interactive Leaflet-based world map
+- Payment-system markers by country
+- Green markers for mature rails
+- Orange markers for emerging rails
+- Click markers to view payment-system details
 
-To learn more about Next.js, take a look at the following resources:
+### Intelligence Layer
+- "Why This Matters" infrastructure context
+- "Who Controls the Rail" governance context
+- Payment rail summary metrics
+- Maturity-based infrastructure view
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Interactive Filtering
+- All
+- Mature
+- Emerging
+- Filter updates the map and payment-system cards without a full page refresh
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Sample Data Download
+The dashboard includes a downloadable CSV containing the structured payment-rail dataset used by the application.
 
-## Deploy on Vercel
+## Dashboard
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The interface follows the Real Rails dashboard approach with:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Dark terminal-style visual design
+- Interactive visualization as the main stage
+- 70/30 main-stage and intelligence-sidebar structure
+- Functional maturity filters
+- Intelligence panels
+- Downloadable sample dataset
+
+## Technology Stack
+
+### Frontend
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Leaflet
+
+### Backend / Data
+- FastAPI
+- Python
+- Pandas
+- Structured payment-rail data
+
+## Project Structure
+
+```text
+POC-5-Real-Time-Payments-Map-Dhanusha/
+│
+├── app/
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── architecture/
+│
+├── screenshots/
+│
+├── Map.tsx
+├── main.py
+├── globals.css
+├── package.json
+├── README.md
+└── .gitignore
